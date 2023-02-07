@@ -1,11 +1,9 @@
 import { useState } from "react";
 import {
+  Alert,
   FlatList,
-  NativeSyntheticEvent,
-  ScrollView,
   Text,
   TextInput,
-  TextInputChangeEventData,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -13,7 +11,7 @@ import { Participant } from "../../components/Participant";
 import { styles } from "./styles";
 
 interface ParticipantList {
-  key: number;
+  id: number;
   name: string;
 }
 
@@ -27,22 +25,28 @@ export function Home() {
     setNewParticipant(name);
   }
 
+  function generateId() {
+    return Math.floor(Math.random() + new Date().getTime());
+  }
+
   function handleAddParticipant() {
-    if (newParticipant.length > 0) {
-      setParticipantsList((state) => [
-        ...state,
-        { key: Math.random(), name: newParticipant },
-      ]);
-      setNewParticipant("");
-      return;
+    if (newParticipant.length === 0) {
+      return Alert.alert(
+        "Inserir nome",
+        "Favor inserir um nome para o novo usuário"
+      );
     }
+    const id = generateId();
+
+    setParticipantsList((state) => [...state, { id, name: newParticipant }]);
+    setNewParticipant("");
 
     return;
   }
 
   function handleRemoveParticipant(id: number) {
     const newList = participantsList.filter(
-      (participant) => participant.key !== id
+      (participant) => participant.id !== id
     );
 
     setParticipantsList(newList);
@@ -70,10 +74,10 @@ export function Home() {
       <FlatList
         showsVerticalScrollIndicator={false}
         data={participantsList}
-        keyExtractor={(item) => item.key.toString()}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <Participant
-            id={item.key}
+            id={item.id}
             name={item.name}
             removeParticipant={handleRemoveParticipant}
           />
