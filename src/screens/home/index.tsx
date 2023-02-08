@@ -21,21 +21,31 @@ export function Home() {
   );
   const [newParticipant, setNewParticipant] = useState("");
 
-  function handleNewParticipantInput(name: string) {
-    setNewParticipant(name);
-  }
-
   function generateId() {
     return Math.floor(Math.random() + new Date().getTime());
   }
 
+  function handleNewParticipantInput(name: string) {
+    setNewParticipant(name);
+  }
+
   function handleAddParticipant() {
+    const participantsName = participantsList.map(
+      (participant) => participant.name
+    );
+
     if (newParticipant.length === 0) {
       return Alert.alert(
         "Inserir nome",
         "Favor inserir um nome para o novo usuário"
       );
+    } else if (participantsName.includes(newParticipant)) {
+      return Alert.alert(
+        "Nome já cadastrado",
+        "Favor inserir um nome único para o novo usuário"
+      );
     }
+
     const id = generateId();
 
     setParticipantsList((state) => [...state, { id, name: newParticipant }]);
