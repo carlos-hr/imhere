@@ -55,11 +55,25 @@ export function Home() {
   }
 
   function handleRemoveParticipant(id: number) {
-    const newList = participantsList.filter(
-      (participant) => participant.id !== id
+    const participant = participantsList.find(
+      (participant) => participant.id === id
     );
 
-    setParticipantsList(newList);
+    Alert.alert("Remover", `Remover o participante ${participant?.name}?`, [
+      {
+        text: "Sim",
+        onPress: () => {
+          const newList = participantsList.filter(
+            (participant) => participant.id !== id
+          );
+          setParticipantsList(newList);
+        },
+      },
+      {
+        text: "Não",
+        style: "cancel",
+      },
+    ]);
   }
 
   return (
